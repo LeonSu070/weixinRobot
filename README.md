@@ -281,7 +281,7 @@ python test.py
 
 ***qqbot.py*** 的运行方法：
 
-- 要接入图灵机器人API时：
+- 要接入腾讯机器人API时：
 
   1. 在[腾讯官网](https://ai.qq.com/product/nlpchat.shtml)注册账号，申请图灵appid和key
 
