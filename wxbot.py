@@ -696,6 +696,8 @@ class WXBot:
             99 -> Unknown
         :param r: 原始微信消息
         """
+        if self.DEBUG:
+            print("wxbot.py, handle_msg, line 700", r)
         for msg in r['AddMsgList']:
             user = {'id': msg['FromUserName'], 'name': 'unknown'}
             if msg['MsgType'] == 51 and msg['StatusNotifyCode'] == 4:  # init message
@@ -1305,7 +1307,6 @@ class WXBot:
         data = r.text
         doc = xml.dom.minidom.parseString(data)
         root = doc.documentElement
-
         for node in root.childNodes:
             if node.nodeName == 'skey':
                 self.skey = node.childNodes[0].data

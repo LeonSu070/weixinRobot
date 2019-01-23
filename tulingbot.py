@@ -23,25 +23,27 @@ class TulingWXBot(WXBot):
 
     def tuling_auto_reply(self, uid, msg):
         if self.tuling_key:
-            url = "http://www.tuling123.com/openapi/api"
+            url = "http://www.tuling123.com/openapi/api/v2"
             user_id = uid.replace('@', '')[:30]
-            body = {'key': self.tuling_key, 'info': msg.encode('utf8'), 'userid': user_id}
+            body = {
+                "reqType":0,
+                "perception": {
+                    "inputText": {
+                        "text": msg.encode('utf8')
+                    }
+                },
+                "userInfo":{
+                    "apiKey": self.tuling_key,
+                    "userId": user_id
+                }
+            }
+            body = json.dumps(body)
             r = requests.post(url, data=body)
             respond = json.loads(r.text)
-            result = ''
-            if respond['code'] == 100000:
-                result = respond['text'].replace('<br>', '  ')
-                result = result.replace(u'\xa0', u' ')
-            elif respond['code'] == 200000:
-                result = respond['url']
-            elif respond['code'] == 302000:
-                for k in respond['list']:
-                    result = result + u"【" + k['source'] + u"】 " +\
-                        k['article'] + "\t" + k['detailurl'] + "\n"
-            else:
-                result = respond['text'].replace('<br>', '  ')
-                result = result.replace(u'\xa0', u' ')
+            print(respond, "=======");
 
+            result = respond['results'][0]['values']['text']
+            
             print '    ROBOT:', result
             return result
         else:
@@ -63,6 +65,8 @@ class TulingWXBot(WXBot):
                     self.send_msg_by_uid(u'[Robot]' + u'机器人已开启！', msg['to_user_id'])
 
     def handle_msg_all(self, msg):
+        if self.DEBUG:
+            print("bot.py, handle_msg_all, line 69", msg)
         if not self.robot_switch and msg['msg_type_id'] != 1:
             return
         if msg['msg_type_id'] == 1 and msg['content']['type'] == 0:  # reply to self
@@ -86,6 +90,8 @@ class TulingWXBot(WXBot):
                             if my_names[k] and my_names[k] == detail['value']:
                                 is_at_me = True
                                 break
+                if self.DEBUG:
+                    print("bot.py, handle_msg_all, line 69", is_at_me)
                 if is_at_me:
                     src_name = msg['content']['user']['name']
                     reply = 'to ' + src_name + ': '
@@ -100,7 +106,6 @@ def main():
     bot = TulingWXBot()
     bot.DEBUG = True
     bot.conf['qr'] = 'png'
-
     bot.run()
 
 
