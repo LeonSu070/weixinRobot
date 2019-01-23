@@ -1,6 +1,10 @@
-# wxBot [![star this repo](http://github-svg-buttons.herokuapp.com/star.svg?user=liuwons&repo=wxBot&style=flat&background=1081C1)](http://github.com/liuwons/wxBot) [![fork this repo](http://github-svg-buttons.herokuapp.com/fork.svg?user=liuwons&repo=wxBot&style=flat&background=1081C1)](http://github.com/liuwons/wxBot/fork) ![python](https://img.shields.io/badge/python-2.7-ff69b4.svg)
+# weixinrobot [![star this repo](http://github-svg-buttons.herokuapp.com/star.svg?user=liuwons&repo=wxBot&style=flat&background=1081C1)](http://github.com/liuwons/wxBot) [![fork this repo](http://github-svg-buttons.herokuapp.com/fork.svg?user=liuwons&repo=wxBot&style=flat&background=1081C1)](http://github.com/liuwons/wxBot/fork) ![python](https://img.shields.io/badge/python-2.7-ff69b4.svg)
 
-**wxBot** 是用Python包装Web微信协议实现的微信机器人框架。
+**weixinrobot** 是用Python包装Web微信协议实现的微信机器人框架。
+该项目copy自https://github.com/liuwons/wxBot 感谢原作者
+
+修改了原图灵接口的版本
+增加了腾讯聊天机器人引擎
 
 目前的消息支持情况:
 
@@ -258,6 +262,49 @@ python test.py
     ```python
     python bot.py
     ```
+***qqbot.py*** 用 **[腾讯机器人]** API 以及 **wxBot** 实现了一个自动回复机器人.
+
+此机器人会回复来自联系人的消息，以及群里@此账号的消息。
+
+并且本帐号可以通过发送 *退下* 、 *走开* 、 *关闭* 、 *关掉* 、 *休息* 、 *滚开* 来关闭机器人的自动回复。
+
+也可以通过发送 *出来* 、 *启动* 、 *工作* 来再次开启机器人的自动回复。
+
+群聊时需要将对应的群保存到联系人列表。
+
+群聊实现效果：
+
+![群聊](img/group_chat.png)
+
+![群聊后台](img/group_chat_backend.jpg)
+
+
+***qqbot.py*** 的运行方法：
+
+- 要接入图灵机器人API时：
+
+  1. 在[腾讯官网](https://ai.qq.com/product/nlpchat.shtml)注册账号，申请图灵appid和key
+
+  2. 在 ***qqbot.py*** 文件所在目录下新建 ***qqconf.ini*** 文件，内容为:(appid和key字段内容为申请到的腾讯聊天机器人应用)
+
+    ```txt
+    [main]    
+    appid=xxxxxx
+    key=xxxxxx
+    ```
+
+  3. 运行 ***qqbot.py***
+
+    ```python
+    python qqbot.py
+    ```
+
+- 不接入机器人API时(此时机器人对联系人消息以及群里@自己的消息统一回复 *知道了* )：
+  1. 运行 ***qqbot.py***
+
+    ```python
+    python qqbot.py
+    ```
 
 ## 6 类似项目
 
@@ -276,4 +323,4 @@ python test.py
 
 问题可以直接开 **issue**
 
-**QQ** 交流群： **429134510** (1群)  **603614392** (2群)
+**QQ** 交流 **719216642**
