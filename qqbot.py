@@ -50,26 +50,31 @@ class QQWXBot(WXBot):
         params = sorted(params.items())
         str = urllib.urlencode(params)
         str += '&app_key=' + self.qqbot_key
-        print str
         m = hashlib.md5()
         m.update(str)
         sign = m.hexdigest().upper()
         return sign
 
     def auto_switch(self, msg):
-        msg_data = msg['content']['data']
+        if msg['msg_type_id'] == 3 and msg['content']['type'] == 0:
+            msg_data = msg['content']['desc']
+            to_use_id = msg['user']['id']
+        else:
+            msg_data = msg['content']['data']
+            to_use_id = msg['to_user_id']
         stop_cmd = [u'退下', u'走开', u'关闭', u'关掉', u'休息', u'滚开']
         start_cmd = [u'出来', u'启动', u'工作']
         if self.robot_switch:
             for i in stop_cmd:
                 if i == msg_data:
                     self.robot_switch = False
-                    self.send_msg_by_uid(u'[Robot]' + u'机器人已关闭！', msg['to_user_id'])
+                    self.send_msg_by_uid(u'[Robot]' + u'机器人已关闭！', to_use_id)
         else:
+            print msg_data
             for i in start_cmd:
                 if i == msg_data:
                     self.robot_switch = True
-                    self.send_msg_by_uid(u'[Robot]' + u'机器人已开启！', msg['to_user_id'])
+                    self.send_msg_by_uid(u'[Robot]' + u'机器人已开启！', to_use_id)
 
     def handle_msg_all(self, msg):
         if self.DEBUG:
@@ -92,9 +97,12 @@ class QQWXBot(WXBot):
 
                 is_at_me = False
                 for detail in msg['content']['detail']:
-                    if detail['type'] == 'at':
-                        for k in my_names:
-                            if my_names[k] and my_names[k] == detail['value']:
+                    #if detail['type'] == 'at':
+                    for k in my_names:
+                        #if my_names[k] and my_names[k] == detail['value']:
+                        if my_names[k]:
+                            i = detail['value'].find(my_names[k])
+                            if i >= 0:
                                 is_at_me = True
                                 break
                 if self.DEBUG:
@@ -103,7 +111,9 @@ class QQWXBot(WXBot):
                     src_name = msg['content']['user']['name']
                     reply = 'to ' + src_name + ': '
                     if msg['content']['type'] == 0:  # text message
-                        reply += self.qqbot_auto_reply(msg['content']['user']['id'], msg['content']['desc'])
+                        self.auto_switch(msg)
+                        if self.robot_switch:
+                            reply += self.qqbot_auto_reply(msg['content']['user']['id'], msg['content']['desc'])
                     else:
                         reply += u"对不起，只认字，其他杂七杂八的我都不认识，,,Ծ‸Ծ,,"
                     self.send_msg_by_uid(reply, msg['user']['id'])
