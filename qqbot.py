@@ -23,7 +23,7 @@ class QQWXBot(WXBot):
             self.qqbot_appid = cf.get('main', 'appid')
         except Exception:
             pass
-        print 'qqbot_key:', self.qqbot_key
+        print('qqbot_key:', self.qqbot_key)
 
     def qqbot_auto_reply(self, uid, msg):
         if self.qqbot_key:
@@ -41,7 +41,7 @@ class QQWXBot(WXBot):
             r = requests.post(url, data=params)
             respond = json.loads(r.text)
             result = respond['data']['answer']
-            print '    ROBOT:', result
+            print('    ROBOT:', result)
             return result
         else:
             return u"知道啦"
@@ -70,7 +70,7 @@ class QQWXBot(WXBot):
                     self.robot_switch = False
                     self.send_msg_by_uid(u'[Robot]' + u'机器人已关闭！', to_use_id)
         else:
-            print msg_data
+            print(msg_data)
             for i in start_cmd:
                 if i == msg_data:
                     self.robot_switch = True
